@@ -2,103 +2,24 @@ import React from 'react';
 import {ActionList, AppProvider, Card, ContextualSaveBar, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText} from '@shopify/polaris';
 
 export default class FrameExample extends React.Component {
-  defaultState = {
-    emailFieldValue: 'dharma@jadedpixel.com',
-    nameFieldValue: 'Jaded Pixel',
-  };
 
   state = {
-    showToast: false,
     isLoading: false,
-    isDirty: false,
-    searchActive: false,
-    searchText: '',
-    userMenuOpen: false,
-    showMobileNavigation: false,
     modalActive: false,
-    nameFieldValue: this.defaultState.nameFieldValue,
-    emailFieldValue: this.defaultState.emailFieldValue,
-    storeName: this.defaultState.nameFieldValue,
-    supportSubject: '',
-    supportMessage: '',
+    showMobileNavigation: false,
   };
 
   render() {
     const {
-      showToast,
-      isLoading,
-      isDirty,
-      searchActive,
-      searchText,
-      userMenuOpen,
-      showMobileNavigation,
-      nameFieldValue,
-      emailFieldValue,
       modalActive,
-      storeName,
+      showMobileNavigation,
     } = this.state;
-
-    const toastMarkup = showToast ? (
-      <Toast
-        onDismiss={this.toggleState('showToast')}
-        content="Changes saved"
-      />
-    ) : null;
-
-    const userMenuActions = [
-      {
-        items: [{content: 'Community forums'}],
-      },
-    ];
-
-    const navigationUserMenuMarkup = (
-      <Navigation.UserMenu
-        actions={userMenuActions}
-        name="Dharma"
-        detail={storeName}
-        avatarInitials="D"
-      />
-    );
-
-    const contextualSaveBarMarkup = isDirty ? (
-      <ContextualSaveBar
-        message="Unsaved changes"
-        saveAction={{
-          onAction: this.handleSave,
-        }}
-        discardAction={{
-          onAction: this.handleDiscard,
-        }}
-      />
-    ) : null;
 
     const userMenuMarkup = (
       <TopBar.UserMenu
-        actions={userMenuActions}
-        name="Dharma"
-        detail={storeName}
-        initials="D"
-        open={userMenuOpen}
-        onToggle={this.toggleState('userMenuOpen')}
-      />
-    );
-
-    const searchResultsMarkup = (
-      <Card>
-        <ActionList
-          items={[
-            {content: 'Shopify help center'},
-            {content: 'Community forums'},
-          ]}
-        />
-      </Card>
-    );
-
-    const searchFieldMarkup = (
-      <TopBar.SearchField
-        onChange={this.handleSearchFieldChange}
-        value={searchText}
-        placeholder="Search"
+        name="Helen B."
+        detail="Administrator"
+        initials="H"
       />
     );
 
@@ -106,93 +27,9 @@ export default class FrameExample extends React.Component {
       <TopBar
         showNavigationToggle={true}
         userMenu={userMenuMarkup}
-        searchResultsVisible={searchActive}
-        searchField={searchFieldMarkup}
-        searchResults={searchResultsMarkup}
-        onSearchResultsDismiss={this.handleSearchResultsDismiss}
         onNavigationToggle={this.toggleState('showMobileNavigation')}
       />
     );
-
-    const navigationMarkup = (
-      <Navigation location="/" userMenu={navigationUserMenuMarkup}>
-        <Navigation.Section
-          items={[
-            {
-              label: 'Back to Shopify',
-              icon: 'arrowLeft',
-            },
-          ]}
-        />
-        <Navigation.Section
-          separator
-          title="Jaded Pixel App"
-          items={[
-            {
-              label: 'Dashboard',
-              icon: 'home',
-              onClick: this.toggleState('isLoading'),
-            },
-            {
-              label: 'Jaded Pixel Orders',
-              icon: 'orders',
-              onClick: this.toggleState('isLoading'),
-            },
-          ]}
-          action={{
-            icon: 'conversation',
-            accessibilityLabel: 'Contact support',
-            onClick: this.toggleState('modalActive'),
-          }}
-        />
-      </Navigation>
-    );
-
-    const loadingMarkup = isLoading ? <Loading /> : null;
-
-    const actualPageMarkup = (
-      <Page title="Account">
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Account details"
-            description="Jaded Pixel will use this as your account information."
-          >
-            <Card sectioned>
-              <FormLayout>
-                <TextField
-                  label="Full name"
-                  value={nameFieldValue}
-                  onChange={this.handleNameFieldChange}
-                />
-                <TextField
-                  type="email"
-                  label="Email"
-                  value={emailFieldValue}
-                  onChange={this.handleEmailFieldChange}
-                />
-              </FormLayout>
-            </Card>
-          </Layout.AnnotatedSection>
-        </Layout>
-      </Page>
-    );
-
-    const loadingPageMarkup = (
-      <SkeletonPage>
-        <Layout>
-          <Layout.Section>
-            <Card sectioned>
-              <TextContainer>
-                <SkeletonDisplayText size="small" />
-                <SkeletonBodyText lines={9} />
-              </TextContainer>
-            </Card>
-          </Layout.Section>
-        </Layout>
-      </SkeletonPage>
-    );
-
-    const pageMarkup = isLoading ? loadingPageMarkup : actualPageMarkup;
 
     const modalMarkup = (
       <Modal
@@ -222,21 +59,76 @@ export default class FrameExample extends React.Component {
       </Modal>
     );
 
+    const navigationMarkup = (
+      <Navigation location="/">
+        <Navigation.Section
+          items={[
+            {
+              label: 'Home',
+              icon: 'home',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Students',
+              icon: 'orders',
+              onClick: this.toggleState('modalActive'),
+            },
+            {
+              label: 'Teachers',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Guardians',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Subjects',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Exams',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'ExtraCurricular',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Fees Collection',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Buses',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Hostels',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+            {
+              label: 'Staff',
+              icon: 'orders',
+              onClick: this.toggleState('isLoading'),
+            },
+          ]}
+        />
+      </Navigation>
+    );
+
     const theme = {
       colors: {
         topBar: {
           background: '#357997',
         },
-      },
-      logo: {
-        width: 124,
-        topBarSource:
-          'https://cdn.shopify.com/s/files/1/0446/6937/files/jaded-pixel-logo-color.svg?6215648040070010999',
-        contextualSaveBarSource:
-          'https://cdn.shopify.com/s/files/1/0446/6937/files/jaded-pixel-logo-gray.svg?6215648040070010999',
-        url: 'http://jadedpixel.com',
-        accessibilityLabel: 'Jaded Pixel',
-      },
+      }
     };
 
     return (
@@ -248,11 +140,7 @@ export default class FrameExample extends React.Component {
             showMobileNavigation={showMobileNavigation}
             onNavigationDismiss={this.toggleState('showMobileNavigation')}
           >
-            {contextualSaveBarMarkup}
-            {loadingMarkup}
-            {pageMarkup}
-            {toastMarkup}
-            {modalMarkup}
+          {modalMarkup}
           </Frame>
         </AppProvider>
       </div>
@@ -263,64 +151,5 @@ export default class FrameExample extends React.Component {
     return () => {
       this.setState((prevState) => ({[key]: !prevState[key]}));
     };
-  };
-
-  handleSearchFieldChange = (value) => {
-    this.setState({searchText: value});
-    if (value.length > 0) {
-      this.setState({searchActive: true});
-    } else {
-      this.setState({searchActive: false});
-    }
-  };
-
-  handleSearchResultsDismiss = () => {
-    this.setState(() => {
-      return {
-        searchActive: false,
-        searchText: '',
-      };
-    });
-  };
-
-  handleEmailFieldChange = (emailFieldValue) => {
-    this.setState({emailFieldValue});
-    if (emailFieldValue != '') {
-      this.setState({isDirty: true});
-    }
-  };
-
-  handleNameFieldChange = (nameFieldValue) => {
-    this.setState({nameFieldValue});
-    if (nameFieldValue != '') {
-      this.setState({isDirty: true});
-    }
-  };
-
-  handleSave = () => {
-    this.defaultState.nameFieldValue = this.state.nameFieldValue;
-    this.defaultState.emailFieldValue = this.state.emailFieldValue;
-
-    this.setState({
-      isDirty: false,
-      showToast: true,
-      storeName: this.defaultState.nameFieldValue,
-    });
-  };
-
-  handleDiscard = () => {
-    this.setState({
-      emailFieldValue: this.defaultState.emailFieldValue,
-      nameFieldValue: this.defaultState.nameFieldValue,
-      isDirty: false,
-    });
-  };
-
-  handleSubjectChange = (supportSubject) => {
-    this.setState({supportSubject});
-  };
-
-  handleMessageChange = (supportMessage) => {
-    this.setState({supportMessage});
   };
 }
