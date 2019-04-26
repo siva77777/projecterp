@@ -1,18 +1,18 @@
 import React from 'react';
-import {ActionList, AppProvider, Card, ContextualSaveBar, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText} from '@shopify/polaris';
-
+import { ActionList, AppProvider, Card, Checkbox, ContextualSaveBar, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText } from '@shopify/polaris';
+import Students from './views/Students';
 export default class FrameExample extends React.Component {
 
   state = {
     isLoading: false,
-    modalActive: false,
+    showStudentsView: false,
     showMobileNavigation: false,
   };
 
   render() {
     const {
-      modalActive,
       showMobileNavigation,
+      showStudentsView
     } = this.state;
 
     const userMenuMarkup = (
@@ -27,36 +27,8 @@ export default class FrameExample extends React.Component {
       <TopBar
         showNavigationToggle={true}
         userMenu={userMenuMarkup}
-        onNavigationToggle={this.toggleState('showMobileNavigation')}
+        onNavigationToggle={showMobileNavigation}
       />
-    );
-
-    const modalMarkup = (
-      <Modal
-        open={modalActive}
-        onClose={this.toggleState('modalActive')}
-        title="Contact support"
-        primaryAction={{
-          content: 'Send',
-          onAction: this.toggleState('modalActive'),
-        }}
-      >
-        <Modal.Section>
-          <FormLayout>
-            <TextField
-              label="Subject"
-              value={this.state.supportSubject}
-              onChange={this.handleSubjectChange}
-            />
-            <TextField
-              label="Message"
-              value={this.state.supportMessage}
-              onChange={this.handleMessageChange}
-              multiline
-            />
-          </FormLayout>
-        </Modal.Section>
-      </Modal>
     );
 
     const navigationMarkup = (
@@ -66,57 +38,47 @@ export default class FrameExample extends React.Component {
             {
               label: 'Home',
               icon: 'home',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Students',
               icon: 'orders',
-              onClick: this.toggleState('modalActive'),
+              onClick: this.showStudentsView,
             },
             {
               label: 'Teachers',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Guardians',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Subjects',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Exams',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'ExtraCurricular',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Fees Collection',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Buses',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Hostels',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
             {
               label: 'Staff',
               icon: 'orders',
-              onClick: this.toggleState('isLoading'),
             },
           ]}
         />
@@ -132,24 +94,27 @@ export default class FrameExample extends React.Component {
     };
 
     return (
-      <div style={{height: '500px'}}>
+      <div style={{ height: '500px' }}>
         <AppProvider theme={theme}>
           <Frame
             topBar={topBarMarkup}
             navigation={navigationMarkup}
             showMobileNavigation={showMobileNavigation}
-            onNavigationDismiss={this.toggleState('showMobileNavigation')}
+            onNavigationDismiss={this.hideMobileNavigation}
           >
-          {modalMarkup}
+            <Students showStudentsView={showStudentsView} />
           </Frame>
         </AppProvider>
       </div>
     );
   }
-
-  toggleState = (key) => {
-    return () => {
-      this.setState((prevState) => ({[key]: !prevState[key]}));
-    };
-  };
+  showMobileNavigation = () => {
+    this.setState({showMobileNavigation: true});
+  }
+  hideMobileNavigation = () => {
+    this.setState({showMobileNavigation: false});
+  }
+  showStudentsView = () => {
+    this.setState({showStudentsView: true});
+  }
 }
