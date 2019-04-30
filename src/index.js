@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {AppProvider} from "@shopify/polaris";
+import { AppProvider } from "@shopify/polaris";
 import App from './App';
 import "@shopify/polaris/styles.css";
 

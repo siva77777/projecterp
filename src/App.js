@@ -1,18 +1,21 @@
 import React from 'react';
 import { ActionList, AppProvider, Card, Checkbox, ContextualSaveBar, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText } from '@shopify/polaris';
 import Students from './views/Students';
+import Buses from './views/Buses';
 export default class FrameExample extends React.Component {
 
   state = {
     isLoading: false,
     showStudentsView: false,
     showMobileNavigation: false,
+    showBusesView: false
   };
 
   render() {
     const {
       showMobileNavigation,
-      showStudentsView
+      showStudentsView,
+      showBusesView
     } = this.state;
 
     const userMenuMarkup = (
@@ -71,6 +74,7 @@ export default class FrameExample extends React.Component {
             {
               label: 'Buses',
               icon: 'orders',
+              onClick: this.showBusesView,
             },
             {
               label: 'Hostels',
@@ -102,19 +106,23 @@ export default class FrameExample extends React.Component {
             showMobileNavigation={showMobileNavigation}
             onNavigationDismiss={this.hideMobileNavigation}
           >
-            <Students showStudentsView={showStudentsView} />
+            {showStudentsView ? <Students /> : null}
+            {showBusesView ? <Buses /> : null}
           </Frame>
         </AppProvider>
       </div>
     );
   }
   showMobileNavigation = () => {
-    this.setState({showMobileNavigation: true});
+    this.setState({ showMobileNavigation: true });
   }
   hideMobileNavigation = () => {
-    this.setState({showMobileNavigation: false});
+    this.setState({ showMobileNavigation: false });
   }
   showStudentsView = () => {
-    this.setState({showStudentsView: true});
+    this.setState({ showStudentsView: true, showBusesView: false });
+  }
+  showBusesView = () => {
+    this.setState({ showBusesView: true, showStudentsView: false });
   }
 }
