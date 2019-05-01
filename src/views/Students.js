@@ -1,10 +1,22 @@
 import React from 'react';
-import { ActionList, AppProvider, Autocomplete, Card, Checkbox, ContextualSaveBar, DatePicker, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, RadioButton, Select, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText } from '@shopify/polaris';
+import { ActionList, AppProvider, Autocomplete, Button, Card, Checkbox, ContextualSaveBar, DatePicker, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, RadioButton, Select, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText } from '@shopify/polaris';
+import BootstrapTable from 'react-bootstrap-table-next';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles.css'
 
 class Students extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      rows: [],
+      classOptions: [],
+      showStudentsModal: false,
+      showFirstPage: true,
+      showSecondPage: false,
       firstNameFieldValue: "",
       lastNameFieldValue: "",
       emailAddressFieldValue: "",
@@ -16,18 +28,31 @@ class Students extends React.Component {
       motherNameFieldValue: "",
       fatherOccupationFieldValue: "",
       motherOccupationFieldValue: "",
-      fatherPhoneNumberFieldValue: "",
+      parentPhoneNumberFieldValue: "",
       guardianNameFieldValue: "",
       guardianPhoneNumberFieldValue: "",
-      showStudentsModal: true,
-      showFirstPage: true,
-      showSecondPage: false,
       value: "disabled"
     };
+    this.fetchData();
   }
 
-  componentWillUnmount() {
-    this.setState({ showStudentsModal: true })
+  fetchData() {
+    fetch("http://192.168.0.108:3000/admission/students").then(response => response.json()).then(data => {
+    var tableData = data;
+      var rows = [];
+      for (var i = 0; i < tableData.length; i++) {
+        rows.push({studentID: tableData[i].Si_studentID, name: tableData[i].Si_firstName + " " + tableData[i].Si_lastName, class: tableData[i].Ci_classStandard, parent: tableData[i].Pi_fatherFirstName + " " + tableData[i].Pi_fatherLastName, phone: tableData[i].Pi_parentPhone, residentDetails: tableData[i].Si_residentDetails});
+      }
+      this.setState({ rows: rows });
+    });
+    fetch("http://192.168.0.108:3000/class/").then(response => response.json()).then(data => {
+      console.log(data, "444444");
+      var options=[];
+      for (var i = 0; i < data.length; i++) {
+        options.push({label: data[i].Ci_classStandard, value: data[i].Ci_classStandard});
+      }
+      this.setState({classOptions: options});
+    })
   }
 
   render() {
@@ -88,6 +113,12 @@ class Students extends React.Component {
                   type="text"
                 />
               </FormLayout.Group>
+              <Select
+                  label="Class"
+                  options={this.state.classOptions}
+                  onChange={this.handleClassChange}
+                  value={this.state.selectedClass}
+              />
               <TextField
                 label="Email address"
                 value={this.state.emailAddressFieldValue}
@@ -167,8 +198,8 @@ class Students extends React.Component {
           onClose={this.handleShowStudentsModalClose}
           title="Heading"
           primaryAction={{
-            content: 'Continue',
-            onAction: this.handleShowStudentsModalClose,
+            content: 'Submit',
+            onAction: this.showSubmitMessage,
           }}
           secondaryActions={[{
             content: 'Back',
@@ -215,9 +246,9 @@ class Students extends React.Component {
                   type="text"
                 />
                 <TextField
-                  label="Father phone number"
-                  value={this.state.fatherPhoneNumberFieldValue}
-                  onChange={this.handleFatherPhoneNumberFieldChange}
+                  label="Parent phone number"
+                  value={this.state.parentPhoneNumberFieldValue}
+                  onChange={this.handleParentPhoneNumberFieldChange}
                   type="text"
                 />
               </FormLayout.Group>
@@ -226,7 +257,64 @@ class Students extends React.Component {
         </Modal>
       );
     }
-    return modalMarkup;
+
+    const { SearchBar } = Search;
+
+    const columns = [{
+      dataField: 'studentID',
+      text: 'Student ID',
+      sort: true
+    }, {
+      dataField: 'name',
+      text: 'Name',
+      sort: true
+    }, {
+      dataField: 'class',
+      text: 'Class',
+      sort: true
+    }, {
+      dataField: 'parent',
+      text: 'Parent',
+      sort: true
+    }, {
+      dataField: 'phone',
+      text: 'Phone',
+      sort: true
+    }, {
+      dataField: 'residentDetails',
+      text: 'Resident Details',
+      sort: true
+    }
+  ];
+
+  var abc = (
+    <Page>
+      {modalMarkup}
+      <div style={{ marginLeft: "89%", marginBottom: "1%" }}><Button primary onClick={this.showStudentsModal}>Add Student</Button></div>
+      <ToolkitProvider
+        keyField="id"
+        data={this.state.rows}
+        columns={columns}
+        search
+      >
+        {
+          props => {
+            return (
+            <div>
+              <SearchBar {...props.searchProps} style={{height:"34px", padding: "6px 12px"}}placeholder="Search Units"/>
+              <BootstrapTable
+                {...props.baseProps}
+                pagination={ paginationFactory() }
+                bootstrap4
+              />
+            </div>
+          )
+            }
+        }
+      </ToolkitProvider>
+    </Page>
+  );
+    return abc;
   }
 
   handleFirstNameFieldChange = (firstNameFieldValue) => {
@@ -274,8 +362,8 @@ class Students extends React.Component {
     this.setState({ motherOccupationFieldValue });
   }
 
-  handleFatherPhoneNumberFieldChange = (fatherPhoneNumberFieldValue) => {
-    this.setState({ fatherPhoneNumberFieldValue });
+  handleFatherPhoneNumberFieldChange = (parentPhoneNumberFieldValue) => {
+    this.setState({ parentPhoneNumberFieldValue });
   }
 
   handleGuardianNameFieldChange = (guardianNameFieldValue) => {
@@ -287,7 +375,7 @@ class Students extends React.Component {
   }
 
   handleShowStudentsModalClose = () => {
-    this.setState({ showStudentsModal: false }, () => { this.state.showStudentsModal = true; this.state.showFirstPage = true; this.state.showSecondPage = false });
+    this.setState({ showStudentsModal: false });
   };
 
   handleShowStudentsModalFirstPage = () => {
@@ -297,6 +385,10 @@ class Students extends React.Component {
   handleShowStudentsModalSecondPage = () => {
     this.setState({ showFirstPage: false, showSecondPage: true });
   }
+
+  handleClassChange = (newValue) => {
+    this.setState({ selectedClass: newValue });
+  };
 
   handleMonthChange = (newValue) => {
     this.setState({ selectedMonth: newValue });
@@ -313,6 +405,57 @@ class Students extends React.Component {
   handleStudentStayChange = (checked, newValue) => {
     this.setState({ value: newValue });
   };
+
+  resetFields = () => {
+    this.setState({
+      showStudentsModal: false,
+      firstNameFieldValue: "",
+      lastNameFieldValue: "",
+      emailAddressFieldValue: "",
+      phoneNumberFieldValue: "",
+      dateFieldValue: "",
+      yearFieldValue: "",
+      addressFieldValue: "",
+      fatherNameFieldValue: "",
+      motherNameFieldValue: "",
+      fatherOccupationFieldValue: "",
+      motherOccupationFieldValue: "",
+      parentPhoneNumberFieldValue: "",
+      guardianNameFieldValue: "",
+      guardianPhoneNumberFieldValue: "",
+      showFirstPage: true,
+      showSecondPage: false,
+      value: "disabled"
+    });      
+  }
+
+  showStudentsModal = () => {
+    this.setState({ showStudentsModal: true });
+  }
+
+  showSubmitMessage = () => {
+    var data = {
+      bName: this.state.busNameFieldValue,
+      bRoute: this.state.busRouteFieldValue,
+      bCapacity: this.state.busCapacityFieldValue,
+      bDriver: this.state.driverNameFieldValue,
+      dPhone: this.state.driverPhoneNumberFieldValue
+    };
+    this.resetFields();
+    fetch("http://192.168.0.108:3000/admission/students", {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+      .then(response => {
+        console.log('Success:', JSON.stringify(response));
+        this.fetchData();
+        this.setState({ showStudentsModal: false });
+      })
+      .catch(error => console.error('Error:', error));
+  }
 }
 
 export default Students;

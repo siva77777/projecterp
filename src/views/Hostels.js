@@ -9,28 +9,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles.css'
 
 
-class Buses extends React.Component {
+class Hostels extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       rows: [],
-      showBusesModal: false,
-      busNameFieldValue: "",
-      busCapacityFieldValue: "",
-      driverNameFieldValue: "",
-      driverPhoneNumberFieldValue: "",
-      busRouteFieldValue: "",
-      selected: 'busName'
+      showHostelsModal: false,
+      hallNameFieldValue: "",
+      hallCapacityFieldValue: "",
+      hallWardenFieldValue: "",
+      wardenPhoneNumberFieldValue: "",
+      remarks: "",
     };
     this.fetchData();
   }
 
   fetchData() {
-    fetch("http://192.168.0.108:3000/bus/").then(response => response.json()).then(data => {
+    fetch("http://192.168.0.108:3000/hostel/").then(response => response.json()).then(data => {
+        console.log(data, "22222");
     var tableData = data;
       var rows = [];
       for (var i = 0; i < tableData.length; i++) {
-        rows.push({busName: tableData[i].Bi_busName, route: tableData[i].Bi_busRoute, capacity: tableData[i].Bi_busCapacity, driver: tableData[i].Bi_busDriverName, phone: tableData[i].Bi_driverPhone});
+        rows.push({hallName: tableData[i].Hi_hallName, hallCapacity: tableData[i].Hi_hallCapacity, hallWarden: tableData[i].Hi_hallWarden, wardenPhoneNumber: tableData[i].Hi_hallWardenPhone, remarks: tableData[i].Hi_hallRemarks});
       }
       this.setState({ rows: rows });
     });
@@ -40,8 +40,8 @@ class Buses extends React.Component {
     var modalMarkup;
     modalMarkup = (
       <Modal
-        open={this.state.showBusesModal}
-        onClose={this.handleShowBusesModalClose}
+        open={this.state.showHostelsModal}
+        onClose={this.handleShowHostelsModalClose}
         title="Heading"
         primaryAction={{
           content: 'Submit',
@@ -52,36 +52,36 @@ class Buses extends React.Component {
           <FormLayout>
             <FormLayout.Group>
               <TextField
-                label="Bus Name"
-                value={this.state.busNameFieldValue}
-                onChange={this.handleBusNameFieldChange}
+                label="Hall Name"
+                value={this.state.hallNameFieldValue}
+                onChange={this.handleHallNameFieldChange}
                 type="text"
               />
               <TextField
-                label="Bus Capacity"
-                value={this.state.busCapacityFieldValue}
-                onChange={this.handleBusCapacityFieldChange}
+                label="Hall Capacity"
+                value={this.state.hallCapacityFieldValue}
+                onChange={this.handleHallCapacityFieldChange}
                 type="text"
               />
             </FormLayout.Group>
             <FormLayout.Group>
-              <TextField
-                label="Driver name"
-                value={this.state.driverNameFieldValue}
-                onChange={this.handleDriverNameFieldChange}
+            <TextField
+                label="Hall Warden"
+                value={this.state.hallWardenFieldValue}
+                onChange={this.handleHallWardenFieldChange}
                 type="text"
               />
               <TextField
-                label="Driver phone number"
-                value={this.state.driverPhoneNumberFieldValue}
-                onChange={this.handleDriverPhoneNumberFieldChange}
+                label="Warden phone number"
+                value={this.state.wardenPhoneNumberFieldValue}
+                onChange={this.handleWardenPhoneNumberFieldChange}
                 type="text"
               />
             </FormLayout.Group>
             <TextField
-              label="Bus Route"
-              value={this.state.busRouteFieldValue}
-              onChange={this.handleBusRouteFieldChange}
+              label="Remarks"
+              value={this.state.remarks}
+              onChange={this.handleRemarksFieldChange}
               type="text"
             />
           </FormLayout>
@@ -91,24 +91,24 @@ class Buses extends React.Component {
     const { SearchBar } = Search;
 
     const columns = [{
-      dataField: 'busName',
-      text: 'Bus Name',
+      dataField: 'hallName',
+      text: 'Hall Name',
       sort: true
     }, {
-      dataField: 'route',
-      text: 'Route',
+        dataField: 'hallCapacity',
+        text: 'Hall Capacity',
+        sort: true
+    }, {
+      dataField: 'hallWarden',
+      text: 'Hall Warden',
       sort: true
     }, {
-      dataField: 'capacity',
-      text: 'Capacity',
+      dataField: 'wardenPhoneNumber',
+      text: 'Warden Phone Number',
       sort: true
     }, {
-      dataField: 'driver',
-      text: 'Driver',
-      sort: true
-    }, {
-      dataField: 'phone',
-      text: 'Phone',
+      dataField: 'remarks',
+      text: 'Remarks',
       sort: true
     }
   ];
@@ -116,7 +116,7 @@ class Buses extends React.Component {
     var abc = (
       <Page>
         {modalMarkup}
-        <div style={{ marginLeft: "89%", marginBottom: "1%" }}><Button primary onClick={this.showBusesModal}>Add Bus</Button></div>
+        <div style={{ marginLeft: "89%", marginBottom: "1%" }}><Button primary onClick={this.showHostelsModal}>Add Hostel</Button></div>
         <ToolkitProvider
           keyField="id"
           data={this.state.rows}
@@ -143,54 +143,54 @@ class Buses extends React.Component {
 
     return abc;
   }
-  showBusesModal = () => {
-    this.setState({ showBusesModal: true });
+  showHostelsModal = () => {
+    this.setState({ showHostelsModal: true });
   }
 
-  handleBusNameFieldChange = (busNameFieldValue) => {
-    this.setState({ busNameFieldValue });
+  handleHallNameFieldChange = (hallNameFieldValue) => {
+    this.setState({ hallNameFieldValue });
   };
 
-  handleBusCapacityFieldChange = (busCapacityFieldValue) => {
-    this.setState({ busCapacityFieldValue });
+  handleHallCapacityFieldChange = (hallCapacityFieldValue) => {
+    this.setState({ hallCapacityFieldValue });
   };
 
-  handleDriverNameFieldChange = (driverNameFieldValue) => {
-    this.setState({ driverNameFieldValue });
+  handleHallWardenFieldChange = (hallWardenFieldValue) => {
+    this.setState({ hallWardenFieldValue });
   };
 
-  handleDriverPhoneNumberFieldChange = (driverPhoneNumberFieldValue) => {
-    this.setState({ driverPhoneNumberFieldValue });
+  handleWardenPhoneNumberFieldChange = (wardenPhoneNumberFieldValue) => {
+    this.setState({ wardenPhoneNumberFieldValue });
   };
 
-  handleBusRouteFieldChange = (busRouteFieldValue) => {
-    this.setState({ busRouteFieldValue });
+  handleRemarksFieldChange = (remarks) => {
+    this.setState({ remarks });
   };
 
-  handleShowBusesModalClose = () => {
+  handleShowHostelsModalClose = () => {
     this.resetFields();
   };
 
   resetFields = () => {
     this.setState({
-      showBusesModal: false,
-      busNameFieldValue: "",
-      busCapacityFieldValue: "",
-      driverNameFieldValue: "",
-      driverPhoneNumberFieldValue: "",
-      busRouteFieldValue: ""
+      showHostelsModal: false,
+      hallNameFieldValue: "",
+      hallCapacityFieldValue: "",
+      hallWardenFieldValue: "",
+      wardenPhoneNumberFieldValue: "",
+      remarks: "",
     });
   }
   showSubmitMessage = () => {
     var data = {
-      bName: this.state.busNameFieldValue,
-      bRoute: this.state.busRouteFieldValue,
-      bCapacity: this.state.busCapacityFieldValue,
-      bDriver: this.state.driverNameFieldValue,
-      dPhone: this.state.driverPhoneNumberFieldValue
+      hName: this.state.hallNameFieldValue,
+      hCapacity: this.state.hallCapacityFieldValue,
+      hWarden: this.state.hallWardenFieldValue,
+      wPhone: this.state.wardenPhoneNumberFieldValue,
+      hRemarks: this.state.remarks
     };
     this.resetFields();
-    fetch("http://192.168.0.108:3000/bus/", {
+    fetch("http://192.168.0.108:3000/hostel/", {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -200,10 +200,10 @@ class Buses extends React.Component {
       .then(response => {
         console.log('Success:', JSON.stringify(response));
         this.fetchData();
-        this.setState({ showBusesModal: false });
+        this.setState({ showHostelsModal: false });
       })
       .catch(error => console.error('Error:', error));
   }
 }
 
-export default Buses;
+export default Hostels;

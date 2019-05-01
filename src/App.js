@@ -2,20 +2,23 @@ import React from 'react';
 import { ActionList, AppProvider, Card, Checkbox, ContextualSaveBar, DisplayText, Form, FormLayout, Frame, Label, Layout, List, Loading, Modal, Navigation, Page, TextContainer, TextField, Toast, TopBar, SkeletonPage, SkeletonBodyText, SkeletonDisplayText } from '@shopify/polaris';
 import Students from './views/Students';
 import Buses from './views/Buses';
+import Hostels from './views/Hostels';
 export default class FrameExample extends React.Component {
 
   state = {
     isLoading: false,
     showStudentsView: false,
     showMobileNavigation: false,
-    showBusesView: false
+    showBusesView: false,
+    showHostelsView: false
   };
 
   render() {
     const {
       showMobileNavigation,
       showStudentsView,
-      showBusesView
+      showBusesView,
+      showHostelsView
     } = this.state;
 
     const userMenuMarkup = (
@@ -79,6 +82,7 @@ export default class FrameExample extends React.Component {
             {
               label: 'Hostels',
               icon: 'orders',
+              onClick: this.showHostelsView
             },
             {
               label: 'Staff',
@@ -108,6 +112,7 @@ export default class FrameExample extends React.Component {
           >
             {showStudentsView ? <Students /> : null}
             {showBusesView ? <Buses /> : null}
+            {showHostelsView ? <Hostels /> : null}
           </Frame>
         </AppProvider>
       </div>
@@ -120,9 +125,12 @@ export default class FrameExample extends React.Component {
     this.setState({ showMobileNavigation: false });
   }
   showStudentsView = () => {
-    this.setState({ showStudentsView: true, showBusesView: false });
+    this.setState({ showStudentsView: true, showBusesView: false, showHostelsView: false });
   }
   showBusesView = () => {
-    this.setState({ showBusesView: true, showStudentsView: false });
+    this.setState({ showBusesView: true, showStudentsView: false, showHostelsView: false });
+  }
+  showHostelsView = () => {
+    this.setState({showHostelsView: true, showBusesView: false, showStudentsView: false});
   }
 }
