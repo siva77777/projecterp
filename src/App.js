@@ -3,6 +3,7 @@ import { ActionList, AppProvider, Card, Checkbox, ContextualSaveBar, DisplayText
 import Students from './views/Students';
 import Buses from './views/Buses';
 import Hostels from './views/Hostels';
+import Standards from './views/Standards';
 export default class FrameExample extends React.Component {
 
   state = {
@@ -10,7 +11,8 @@ export default class FrameExample extends React.Component {
     showStudentsView: false,
     showMobileNavigation: false,
     showBusesView: false,
-    showHostelsView: false
+    showHostelsView: false,
+    showStandardsView: false
   };
 
   render() {
@@ -18,7 +20,8 @@ export default class FrameExample extends React.Component {
       showMobileNavigation,
       showStudentsView,
       showBusesView,
-      showHostelsView
+      showHostelsView,
+      showStandardsView
     } = this.state;
 
     const userMenuMarkup = (
@@ -57,6 +60,11 @@ export default class FrameExample extends React.Component {
             {
               label: 'Guardians',
               icon: 'orders',
+            },
+            {
+              label: 'Standards',
+              icon: 'orders',
+              onClick: this.showStandardsView,
             },
             {
               label: 'Subjects',
@@ -113,6 +121,7 @@ export default class FrameExample extends React.Component {
             {showStudentsView ? <Students /> : null}
             {showBusesView ? <Buses /> : null}
             {showHostelsView ? <Hostels /> : null}
+            {showStandardsView ? <Standards /> : null}
           </Frame>
         </AppProvider>
       </div>
@@ -125,12 +134,15 @@ export default class FrameExample extends React.Component {
     this.setState({ showMobileNavigation: false });
   }
   showStudentsView = () => {
-    this.setState({ showStudentsView: true, showBusesView: false, showHostelsView: false });
+    this.setState({ showStudentsView: true, showBusesView: false, showHostelsView: false, showStandardsView: false });
   }
   showBusesView = () => {
-    this.setState({ showBusesView: true, showStudentsView: false, showHostelsView: false });
+    this.setState({ showBusesView: true, showStudentsView: false, showHostelsView: false, showStandardsView: false });
   }
   showHostelsView = () => {
-    this.setState({showHostelsView: true, showBusesView: false, showStudentsView: false});
+    this.setState({ showHostelsView: true, showBusesView: false, showStudentsView: false, showStandardsView: false });
+  }
+  showStandardsView = () => {
+    this.setState({ showHostelsView: false, showBusesView: false, showStudentsView: false, showStandardsView: true })
   }
 }
