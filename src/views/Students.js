@@ -173,6 +173,8 @@ class Students extends React.Component {
                 type="text"
                 multiline
               />
+              <FormLayout.Group condensed>
+                  <div className="Polaris-Label">Select residential type: </div>
               <RadioButton
                 label="Day scholar"
                 checked={this.state.value === 'disabled'}
@@ -187,6 +189,7 @@ class Students extends React.Component {
                 id="optional"
                 onChange={this.handleStudentStayChange}
               />
+              </FormLayout.Group>
             </FormLayout>
           </Modal.Section>
         </Modal>
